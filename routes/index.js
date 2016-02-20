@@ -53,7 +53,55 @@ var index=function(){
             type:'pest' 
         }).then(function (body) { 
             var hits = body.hits.hits;
-            console.log(hits);
+           // console.log(hits);
+            res.send(hits);
+        }, function (error) { 
+            console.trace(error.message); 
+        }); 
+    });
+
+    router.get('/data/stagedata', function(req, res) {
+        //res.status(500).send('something went wrong while connecting to service');
+
+        console.log("entering stage");
+        client.search({ 
+            index:'data',
+            type:'stage' 
+        }).then(function (body) { 
+            var hits = body.hits.hits;
+            //console.log(hits);
+            res.send(hits);
+        }, function (error) { 
+            console.trace(error.message); 
+        }); 
+    });
+
+    router.get('/data/cropdata', function(req, res) {
+        //res.status(500).send('something went wrong while connecting to service');
+
+        console.log("entering crops");
+        client.search({ 
+            index:'data',
+            type:'cropdata1' 
+        }).then(function (body) { 
+            var hits = body.hits.hits;
+            //console.log(hits);
+            res.send(hits);
+        }, function (error) { 
+            console.trace(error.message); 
+        }); 
+    });
+
+router.get('/data/soildata', function(req, res) {
+        //res.status(500).send('something went wrong while connecting to service');
+
+        console.log("entering crops");
+        client.search({ 
+            index:'data',
+            type:'soildata1' 
+        }).then(function (body) { 
+            var hits = body.hits.hits;
+            //console.log(hits);
             res.send(hits);
         }, function (error) { 
             console.trace(error.message); 
@@ -62,21 +110,22 @@ var index=function(){
 
     //Handle About before and after login
     router.get("/submit", function(req,res){
-        console.log("Here");
+        console.log("entered submit");
         client.search({
             "index":"data",
             "type":"crops",
             "body": {
                         query: {
                             match: {
-                                "name": req.query.crop
+                                
+                                "stage": req.query.stage
                             }
                         }
                     }
         }).then(function (body) {
             var hits = body.hits.hits;
-            console.log(hits.pest.solution);
-            res.send(hits.pest.solution);
+            console.log("solution is"+hits.pest.solution);
+            //res.send(hits.pest.solution);
             //res.render('qna-timeline',hits);
         }, function (error) {
             console.trace(error.message);

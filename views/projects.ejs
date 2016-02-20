@@ -472,11 +472,63 @@ $("#choose").change(function (e) {
    if(F && F[0]) for(var i=0; i<F.length; i++) readImage( F[i] );
 });
 
-        var availableCropTags = ["wheat", "paddy", "cotton"];
+        var availableCropTags = [];
 
-        var availableSoilTags = ["Black", "Red"];
+        var availableSoilTags = [];
 
-         var availableStageTags = ["Sowing","Ploughing","Blooming","Harvest"];
+         var availableStageTags = [];
+         $.ajax({
+              url:"../data/cropdata",
+              type:"GET",
+              //headers:{"Accept":"application/json;odata=verbose"},
+              success:function(data){
+                console.log(data);
+                  for(var i in data){
+                    //alert(i);
+                   
+                    availableCropTags.push(data[i]._source.name);
+                    
+                    }
+              },
+              error:function(data){
+                  alert("error inside this");
+              }
+            });
+
+             $.ajax({
+              url:"../data/soildata",
+              type:"GET",
+              //headers:{"Accept":"application/json;odata=verbose"},
+              success:function(data){
+                console.log(data);
+                  for(var i in data){
+                    //alert(i);
+                   
+                    availableSoilTags.push(data[i]._source.soil);
+                    
+                    }
+              },
+              error:function(data){
+                  alert("error inside this");
+              }
+            });
+             $.ajax({
+              url:"../data/stagedata",
+              type:"GET",
+              //headers:{"Accept":"application/json;odata=verbose"},
+              success:function(data){
+                console.log(data);
+                  for(var i in data){
+                    //alert(i);
+                   
+                    availableStageTags.push(data[i]._source.name);
+                    
+                    }
+              },
+              error:function(data){
+                  alert("error inside this");
+              }
+            });
 
         function split( val ) {
           return val.split( /,\s*/ );
@@ -576,7 +628,8 @@ $("#choose").change(function (e) {
                     //alert(i);
                     //var image = new Image();
                     //image.src = 'data:image/png;base64,'+data[i]._source.image;
-                    $('#imagelist').append("<img class='pestImg' src='data:image/png;base64,"+data[i]._source.image+"'/>");
+                   //$('#imagelist').append("<img class='pestImg' src='data:image/png;base64,"+data[i]._source.image+"'/>");
+                     $('#imagelist').append("<img class='pestImg' src='data:image/png;base64,"+data[i]._source.image+"' id='"+data[i]._source.name+"'/>");
                   }
               },
               error:function(data){
@@ -613,11 +666,12 @@ $("#choose").change(function (e) {
              //var formdata=new Object();
              var crop = $('#crop').val();
              var soil = $('#soil').val();
-             var stage = $('#stage').val();
+             var stage = $('#stage1').val();
              var pestImage = "";
              if (imgSource != ""){
                  pestImage = imgSource;
              }
+             alert(crop+soil+stage+pestImage);
               
              $.ajax({
                  url:"../submit?crop="+crop+"&soil="+soil+"&stage="+stage+"&pestImage="+pestImage,
